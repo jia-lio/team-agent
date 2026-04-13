@@ -1,6 +1,6 @@
 {
   "name": "@jia-lio/team-agent",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Claude Code team-agent skills installer (Unity, Cocos Creator)",
   "bin": {
     "team-agent": "bin/cli.js"
