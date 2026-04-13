@@ -1,0 +1,29 @@
+{
+  "name": "@jia-lio/team-agent",
+  "version": "1.0.0",
+  "description": "Claude Code team-agent skills installer (Unity, Cocos Creator)",
+  "bin": {
+    "team-agent": "bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "cocos-team-agent/",
+    "unity-team-agent/"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jia-lio/team-agent.git"
+  },
+  "keywords": [
+    "claude-code",
+    "skill",
+    "unity",
+    "cocos-creator",
+    "multi-agent"
+  ],
+  "author": "jia-lio",
+  "license": "MIT"
+}
