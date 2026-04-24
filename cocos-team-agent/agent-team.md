@@ -269,6 +269,45 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       },
       "builtin": true
     },
+    "cocos-system-programmer": {
+      "name": "시스템 프로그래머",
+      "description": "게임 핵심 시스템 구현 - 인벤토리, 전투, 퀘스트, 스킬, 상태머신 등",
+      "agentType": "deep-executor",
+      "model": "opus",
+      "keywords": ["시스템구현", "인벤토리", "전투시스템", "퀘스트", "스킬시스템", "상태머신", "FSM", "매니저", "싱글톤", "이벤트버스", "옵저버", "커맨드패턴"],
+      "filePatterns": ["assets/**/*.ts"],
+      "versionContext": {
+        "2.x": "미들급 이상 시스템 프로그래머. cc.Component 기반 게임 핵심 시스템(인벤토리, 전투, 퀘스트, 스킬트리, 제작) 구현. FSM/상태 패턴, Observer/cc.systemEvent 이벤트 버스, 커맨드 패턴 적용. 싱글톤 매니저 패턴(cc.game.addPersistRootNode). 시스템 간 의존성 최소화, 인터페이스 기반 추상화. SOLID 원칙 준수. 확장 가능하고 유지보수 용이한 코드 작성.",
+        "3.x": "미들급 이상 시스템 프로그래머. Component 기반 (import from 'cc') 게임 핵심 시스템(인벤토리, 전투, 퀘스트, 스킬트리, 제작) 구현. FSM/상태 패턴, Observer/EventTarget 이벤트 버스, 커맨드 패턴 적용. 싱글톤 매니저 패턴(director.addPersistRootNode). 시스템 간 의존성 최소화, 인터페이스 기반 추상화. SOLID 원칙 준수. 확장 가능하고 유지보수 용이한 코드 작성."
+      },
+      "builtin": true
+    },
+    "cocos-content-programmer": {
+      "name": "컨텐츠 프로그래머",
+      "description": "라이브 서비스 컨텐츠 구현 - 이벤트, 미션, 보상, 시즌, 업데이트 시스템",
+      "agentType": "executor",
+      "model": "sonnet",
+      "keywords": ["컨텐츠구현", "이벤트시스템", "미션", "보상", "시즌", "업데이트", "라이브서비스", "튜토리얼구현", "업적", "일일미션", "출석"],
+      "filePatterns": ["assets/**/*.ts"],
+      "versionContext": {
+        "2.x": "미들급 이상 컨텐츠 프로그래머. 라이브 서비스 컨텐츠 시스템(이벤트, 미션, 보상, 시즌, 업적, 출석, 튜토리얼) 구현. cc.loader/cc.resources 기반 컨텐츠 데이터 로딩. JSON 파일 기반 데이터 드리븐 컨텐츠 파이프라인. 서버 연동(XMLHttpRequest/WebSocket). 기획 테이블 변경만으로 컨텐츠 추가 가능한 구조 지향.",
+        "3.x": "미들급 이상 컨텐츠 프로그래머. 라이브 서비스 컨텐츠 시스템(이벤트, 미션, 보상, 시즌, 업적, 출석, 튜토리얼) 구현. resources/AssetBundle 기반 컨텐츠 데이터 로딩. JsonAsset 기반 데이터 드리븐 컨텐츠 파이프라인. 서버 연동(fetch/WebSocket). 기획 테이블 변경만으로 컨텐츠 추가 가능한 구조 지향."
+      },
+      "builtin": true
+    },
+    "cocos-data-db": {
+      "name": "데이터/DB 프로그래머",
+      "description": "세이브/로드, 데이터 영속성, DB 연동, 직렬화, 마이그레이션",
+      "agentType": "executor",
+      "model": "sonnet",
+      "keywords": ["세이브", "로드", "저장", "데이터베이스", "DB", "직렬화", "localStorage", "JSON저장", "Firebase", "마이그레이션", "백업", "암호화"],
+      "filePatterns": ["assets/**/*.ts"],
+      "versionContext": {
+        "2.x": "미들급 이상 데이터/DB 프로그래머. 게임 세이브/로드 시스템, 데이터 영속성 관리. cc.sys.localStorage 기반 저장. JSON 직렬화/역직렬화. Firebase Realtime DB 연동. 데이터 마이그레이션(버전 간 세이브 호환). 암호화/무결성 검증. 자동 저장, 슬롯 관리. 네이티브: jsb.fileUtils 파일 I/O. 데이터 손실 방지를 위한 트랜잭션 처리.",
+        "3.x": "미들급 이상 데이터/DB 프로그래머. 게임 세이브/로드 시스템, 데이터 영속성 관리. sys.localStorage 기반 저장. JSON 직렬화/역직렬화. Firebase Realtime DB/Firestore 연동. 데이터 마이그레이션(버전 간 세이브 호환). 암호화/무결성 검증. 자동 저장, 슬롯 관리. 네이티브: native.fileUtils 파일 I/O. 데이터 손실 방지를 위한 트랜잭션 처리."
+      },
+      "builtin": true
+    },
     "git-manager": {
       "name": "Git 관리자",
       "description": "커밋, 브랜치, PR, 머지, 리베이스 관리",
@@ -287,6 +326,84 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       "keywords": ["문서", "README", "주석", "API문서", "가이드", "docs"],
       "filePatterns": ["*.md", "*.txt"],
       "systemContext": "기술 문서 작성 전문가. Cocos Creator 프로젝트 구조와 API 이해.",
+      "builtin": true
+    },
+    "game-concept-designer": {
+      "name": "초기 기획자",
+      "description": "레퍼런스/영상/아이디어 분석 → 프로토타입 기획서(GDD) 작성",
+      "agentType": "deep-executor",
+      "model": "opus",
+      "keywords": ["기획", "GDD", "프로토타입", "레퍼런스", "컨셉", "게임디자인", "핵심루프", "타겟유저", "장르", "메카닉"],
+      "filePatterns": ["docs/**/*.md", "docs/**/*.json", "*.md"],
+      "versionContext": {
+        "2.x": "게임 초기 기획 전문가. 유저의 레퍼런스, 영상, 아이디어를 분석하여 프로토타입 수준의 GDD 작성. Cocos Creator 2.x 기준으로 cc.sys.localStorage 저장, JSON 파일 기반 데이터, cc.loader/cc.resources 에셋 로딩, .fire 씬 구조를 고려한 기획. 산출물: GDD 문서.",
+        "3.x": "게임 초기 기획 전문가. 유저의 레퍼런스, 영상, 아이디어를 분석하여 프로토타입 수준의 GDD 작성. Cocos Creator 3.x 기준으로 sys.localStorage 저장, JsonAsset/JSON 데이터, resources/AssetBundle 에셋 로딩, .scene 씬 구조를 고려한 기획. 산출물: GDD 문서."
+      },
+      "builtin": true
+    },
+    "balance-designer": {
+      "name": "밸런스 기획자",
+      "description": "레벨/경제/난이도 수치 설계, 밸런스 테이블, 시뮬레이션",
+      "agentType": "executor",
+      "model": "opus",
+      "keywords": ["밸런스", "수치", "레벨디자인", "경제", "난이도", "성장", "확률", "테이블", "시뮬레이션", "곡선", "보상"],
+      "filePatterns": ["docs/**/*.md", "docs/**/*.csv", "docs/**/*.json"],
+      "versionContext": {
+        "2.x": "게임 밸런스/수치 기획 전문가. 레벨 디자인, 경제 시스템, 난이도 곡선, 성장 테이블, 확률 설계. Cocos Creator 2.x 기준으로 JSON 파일 기반 수치 테이블, cc.loader로 런타임 데이터 로딩, cc.sys.localStorage 저장 구조 고려. 산출물: 밸런스 테이블, 수치 기획서.",
+        "3.x": "게임 밸런스/수치 기획 전문가. 레벨 디자인, 경제 시스템, 난이도 곡선, 성장 테이블, 확률 설계. Cocos Creator 3.x 기준으로 JsonAsset 기반 수치 테이블, resources/AssetBundle 데이터 로딩, sys.localStorage 저장 구조 고려. 산출물: 밸런스 테이블, 수치 기획서."
+      },
+      "builtin": true
+    },
+    "system-designer": {
+      "name": "시스템 기획자",
+      "description": "게임 시스템 구조 설계 (인벤토리, 전투, 퀘스트 등)",
+      "agentType": "deep-executor",
+      "model": "opus",
+      "keywords": ["시스템", "인벤토리", "전투", "퀘스트", "스킬", "제작", "상태머신", "데이터플로우", "시스템설계"],
+      "filePatterns": ["docs/**/*.md", "docs/**/*.json"],
+      "versionContext": {
+        "2.x": "게임 시스템 기획 전문가. 인벤토리, 전투, 퀘스트, 스킬 등 시스템 구조와 상호작용 설계. Cocos Creator 2.x 기준으로 cc.Component 기반 설계, cc.systemEvent 이벤트 채널, 싱글톤 매니저 패턴, JSON 데이터 구조 고려. 산출물: 시스템 기획서.",
+        "3.x": "게임 시스템 기획 전문가. 인벤토리, 전투, 퀘스트, 스킬 등 시스템 구조와 상호작용 설계. Cocos Creator 3.x 기준으로 Component 기반 설계, EventTarget 이벤트 채널, 싱글톤 매니저 패턴, JsonAsset 데이터 구조 고려. 산출물: 시스템 기획서."
+      },
+      "builtin": true
+    },
+    "content-designer": {
+      "name": "컨텐츠 기획자",
+      "description": "라이브 업데이트, 시즌/이벤트 컨텐츠, 보상 체계 설계",
+      "agentType": "executor",
+      "model": "sonnet",
+      "keywords": ["컨텐츠", "이벤트", "시즌", "업데이트", "미션", "보상", "리텐션", "라이브서비스", "로드맵"],
+      "filePatterns": ["docs/**/*.md", "docs/**/*.json", "docs/**/*.csv"],
+      "versionContext": {
+        "2.x": "라이브 서비스 컨텐츠 기획 전문가. 시즌/이벤트 컨텐츠, 업데이트 로드맵, 미션, 보상 체계 설계. Cocos Creator 2.x 기준으로 cc.assetManager.loadBundle() 원격 에셋, JSON 컨텐츠 데이터, 서버 연동 구조 고려. 산출물: 컨텐츠 기획서.",
+        "3.x": "라이브 서비스 컨텐츠 기획 전문가. 시즌/이벤트 컨텐츠, 업데이트 로드맵, 미션, 보상 체계 설계. Cocos Creator 3.x 기준으로 AssetBundle 원격 에셋, JsonAsset 컨텐츠 데이터, 서버 연동 구조 고려. 산출물: 컨텐츠 기획서."
+      },
+      "builtin": true
+    },
+    "narrative-designer": {
+      "name": "내러티브 기획자",
+      "description": "스토리, 세계관, 캐릭터 설정, 대사, 퀘스트 텍스트",
+      "agentType": "executor",
+      "model": "sonnet",
+      "keywords": ["스토리", "내러티브", "세계관", "캐릭터", "대사", "퀘스트텍스트", "컷씬", "분기", "선택지", "다이얼로그"],
+      "filePatterns": ["docs/**/*.md", "docs/**/*.json"],
+      "versionContext": {
+        "2.x": "게임 내러티브 기획 전문가. 세계관, 스토리라인, 캐릭터, 대사, 퀘스트 텍스트, 컷씬 연출 설계. Cocos Creator 2.x 기준으로 JSON 대화 데이터, cc.Animation 컷씬 구조, i18n 다국어 텍스트 관리 고려. 산출물: 내러티브 문서, 대사 스크립트.",
+        "3.x": "게임 내러티브 기획 전문가. 세계관, 스토리라인, 캐릭터, 대사, 퀘스트 텍스트, 컷씬 연출 설계. Cocos Creator 3.x 기준으로 JsonAsset 대화 데이터, Animation/AnimationGraph 컷씬 구조, i18n 다국어 텍스트 관리 고려. 산출물: 내러티브 문서, 대사 스크립트."
+      },
+      "builtin": true
+    },
+    "ux-flow-designer": {
+      "name": "UX 플로우 기획자",
+      "description": "유저 동선, 튜토리얼, 온보딩, UI 플로우 설계",
+      "agentType": "designer",
+      "model": "sonnet",
+      "keywords": ["UX", "플로우", "동선", "튜토리얼", "온보딩", "와이어프레임", "화면전환", "정보구조", "유저경험"],
+      "filePatterns": ["docs/**/*.md", "docs/**/*.json"],
+      "versionContext": {
+        "2.x": "게임 UX 플로우 기획 전문가. 유저 동선, 튜토리얼, 온보딩, UI 정보 구조, 화면 전환 설계. Cocos Creator 2.x 기준으로 cc.Widget/cc.Layout 기반 UI 계층, cc.director.loadScene() 씬 전환, .fire 씬 구조를 고려한 와이어프레임 수준 설계. 산출물: UX 플로우 문서.",
+        "3.x": "게임 UX 플로우 기획 전문가. 유저 동선, 튜토리얼, 온보딩, UI 정보 구조, 화면 전환 설계. Cocos Creator 3.x 기준으로 UITransform/Widget/Layout 기반 UI 계층, director.loadScene() 씬 전환, .scene 씬 구조를 고려한 와이어프레임 수준 설계. 산출물: UX 플로우 문서."
+      },
       "builtin": true
     }
   },
@@ -386,6 +503,8 @@ Cocos Creator {engine_version}
       "id": "1",
       "description": "서브태스크 설명",
       "role": "역할 ID (roles에서 선택)",
+      "phase": "plan|implement|support",
+      "plannerTaskId": "대응 기획 태스크 ID (implement만 필수, plan/support는 생략)",
       "files": ["대상 파일/패턴"],
       "dependsOn": [],
       "priority": "high|medium|low",
@@ -429,6 +548,13 @@ Cocos Creator {engine_version}
 10. 파일 소유권 겹침 금지. 같은 그룹 내 서브태스크는 서로 다른 파일 담당.
 11. subtasks 최소 1개 (불명확해도 cocos-gameplay 기본 할당).
 12. useTools에 해당 작업에서 사용해야 할 cc 도구 명시 (cc-static, cc-preview, cc-editor, cc-build 등).
+13. **기획→구현 파이프라인 필수**: 구현 작업에는 반드시 대응하는 기획 태스크를 먼저 생성하세요.
+    - 기획 역할(phase: "plan"): game-concept-designer, balance-designer, system-designer, content-designer, narrative-designer, ux-flow-designer
+    - 프로그래머 역할(phase: "implement"): cocos-gameplay, cocos-system-programmer, cocos-content-programmer, cocos-data-db, cocos-prefab, cocos-animation, cocos-audio, cocos-physics, cocos-resource, cocos-network, cocos-shader, cocos-performance, cocos-platform, cocos-i18n
+    - 지원 역할(phase: "support"): git-manager, docs-writer, cocos-architect, cocos-migrate, cocos-preview
+    - implement의 plannerTaskId에 대응 기획 태스크 ID 지정, dependsOn에도 포함
+    - executionGroups에서 plan phase가 implement phase보다 항상 앞 그룹에 배치
+14. 기획이 불필요한 단순 작업(버그 수정, 리팩토링, 코드 정리)은 plannerTaskId 생략 가능. phase: "implement" 또는 "support"로 직접 할당.
 """
 )
 ```
@@ -471,7 +597,7 @@ Architect의 분석 결과에 `newRoles`가 있으면:
 
 ---
 
-## STEP 3: EXECUTE (병렬 실행)
+## STEP 3: PLAN → EXECUTE (기획 → 구현 파이프라인)
 
 ### 3-0. 기존 변경사항 스냅샷
 
@@ -481,36 +607,41 @@ git diff --name-only          # 기존 수정 파일 목록 → pre_modified_fil
 git ls-files --others --exclude-standard  # 기존 untracked 파일 → pre_untracked_files
 ```
 
-### 3-1. 실행 그룹별 순차 처리
+### 3-1. 버전별 컨텍스트 추출 (공통)
 
-executionGroups를 group 번호 순서대로 실행합니다.
-
-각 그룹 내 서브태스크는 **병렬**로 실행:
+각 에이전트 실행 시 버전별 컨텍스트를 추출합니다:
 
 ```
-for each group in executionGroups (sorted by group number):
+if subtask.role == "cocos-migrate":
+  context = role.versionContext["2.x→3.x"]
+elif role.versionContext and engine_version in role.versionContext:
+  context = role.versionContext[engine_version]
+elif role.systemContext:
+  context = role.systemContext
+else:
+  context = "Cocos Creator " + engine_version + " 프로젝트입니다."
+
+knowledge_warnings = load_high_risk_rules(engine_version)
+```
+
+### 3-2. Phase A: 기획 에이전트 실행
+
+phase: "plan"인 서브태스크를 먼저 실행합니다.
+
+```
+plan_tasks = [t for t in subtasks if t.phase == "plan"]
+
+for each group in plan_groups:
   agents = []
   for each taskId in group.taskIds:
     subtask = subtasks[taskId]
     role = roles[subtask.role]
-
-    # 버전별 컨텍스트 추출
-    if subtask.role == "cocos-migrate":
-      context = role.versionContext["2.x→3.x"]
-    elif role.versionContext and engine_version in role.versionContext:
-      context = role.versionContext[engine_version]
-    elif role.systemContext:
-      context = role.systemContext
-    else:
-      context = "Cocos Creator " + engine_version + " 프로젝트입니다."
-
-    # cc-knowledge HIGH 리스크 규칙 로드
-    knowledge_warnings = load_high_risk_rules(engine_version)
+    context = extract_version_context(role, engine_version)
 
     agent = Agent(
-      description: "{role.name}: {subtask.description}",
+      description: "기획: {role.name} - {subtask.description}",
       subagent_type: role.agentType,
-      model: role.model || "sonnet",
+      model: role.model || "opus",
       run_in_background: true,
       prompt: """
 ## 역할: {role.name}
@@ -524,6 +655,118 @@ for each group in executionGroups (sorted by group number):
 
 ## 작업
 {subtask.description}
+
+## 파일 소유권
+당신이 작성할 수 있는 파일: {subtask.files}
+
+## 출력 요구사항
+기획 산출물을 **구체적이고 구현 가능한 수준**으로 작성하세요.
+프로그래머가 이 기획서만 보고 바로 구현할 수 있어야 합니다.
+
+반드시 아래 내용을 포함하세요:
+1. 기능 요구사항 (무엇을 만들어야 하는가)
+2. 데이터 구조 설계 (클래스, 필드, 관계)
+3. 핵심 로직 플로우 (상태 전이, 이벤트 흐름)
+4. 외부 의존성 (다른 시스템과의 연동 포인트)
+5. 예외/엣지 케이스 처리 방침
+
+### 기획서
+[위 내용을 포함한 상세 기획서]
+"""
+    )
+    agents.append(agent)
+
+  wait for all agents in group to complete
+  collect results
+```
+
+**기획 산출물 저장**: 각 기획 에이전트의 결과를 `.omc/agent-team/plans/{taskId}.md`에 저장합니다.
+
+### 3-2-1. Plan-only 산출물 즉시 전달
+
+Phase A 완료 후, 대응하는 implement 태스크가 **없는** 기획 산출물은 즉시 사용자에게 보여줍니다.
+구현이 필요한 기획은 Phase B로 넘깁니다.
+
+```
+# plan-only vs plan-with-impl 분류
+plan_only = [t for t in plan_tasks if no implement task references t.id as plannerTaskId]
+plan_with_impl = [t for t in plan_tasks if any implement task references t.id as plannerTaskId]
+
+if plan_only:
+  # 사용자에게 즉시 기획서 제시
+  for task in plan_only:
+    print("## 기획 완료: {task.description}")
+    print(read(".omc/agent-team/plans/{task.id}.md"))
+
+  # Phase B를 백그라운드로 먼저 시작 (구현 작업은 기다리지 않음)
+  start Phase B in background (plan_with_impl tasks only)
+
+  # 사용자 피드백 수집 (구현은 병렬 진행 중)
+  AskUserQuestion("""
+  위 기획 산출물을 확인해주세요.
+  (구현 작업은 병렬로 진행 중입니다)
+
+  - 승인: 기획서 확정
+  - 수정 요청: 수정할 내용을 알려주세요 (최대 2회)
+  """)
+
+  if 수정 요청:
+    # 해당 기획 에이전트 재실행 (최대 2회)
+    re-run planner with user feedback
+    save updated plan
+
+else:
+  # 모든 기획이 구현 대상 → 바로 Phase B 진행
+  proceed to Phase B
+```
+
+### 3-3. Phase B: 프로그래머 에이전트 실행
+
+phase: "implement"인 서브태스크를 실행합니다. 각 프로그래머 에이전트에게 대응하는 기획 산출물을 주입합니다.
+
+```
+impl_tasks = [t for t in subtasks if t.phase == "implement"]
+
+for each group in implement_groups:
+  agents = []
+  for each taskId in group.taskIds:
+    subtask = subtasks[taskId]
+    role = roles[subtask.role]
+    context = extract_version_context(role, engine_version)
+
+    # 대응 기획 산출물 로드
+    if subtask.plannerTaskId:
+      plan_doc = read(".omc/agent-team/plans/{subtask.plannerTaskId}.md")
+    else:
+      plan_doc = "(기획서 없음 - 직접 판단하여 구현)"
+
+    agent = Agent(
+      description: "구현: {role.name} - {subtask.description}",
+      subagent_type: role.agentType,
+      model: role.model || "sonnet",
+      run_in_background: true,
+      prompt: """
+## 역할: {role.name}
+## 엔진: Cocos Creator {engine_version}
+
+## 엔진 컨텍스트
+{context}
+
+## 중요 규칙 (cc-knowledge HIGH 리스크)
+{knowledge_warnings}
+
+## 기획서 (기획 에이전트 산출물)
+{plan_doc}
+
+## 작업
+위 기획서를 기반으로 다음을 구현하세요:
+{subtask.description}
+
+## 구현 절차 (반드시 순서대로)
+1. **기획서 분석**: 기획서의 요구사항, 데이터 구조, 로직 플로우를 파악
+2. **구현 계획 수립**: 어떤 파일에 어떤 코드를 작성할지 계획 (파일 목록, 클래스/메서드 구조)
+3. **구현**: 계획에 따라 코드 작성
+4. **자체 검증**: 타입 에러 없는지, 기획서 요구사항을 모두 충족했는지 확인
 
 ## 사용할 도구
 {subtask.useTools} (해당 도구가 있으면 적극 활용하세요)
@@ -540,39 +783,39 @@ for each group in executionGroups (sorted by group number):
 - [3.x] import 경로에 확장자를 포함하지 마세요 (Cocos 번들러 규칙).
 - [2.x] Map/Set iterator spread(...) 사용 금지 — 런타임 크래시 유발 (HIGH 리스크).
 
-## 완료 기준
-- 할당된 작업을 완료하세요
-- 수정한 파일 목록과 변경 요약을 마지막에 출력하세요
-- 타입 에러가 발생하지 않도록 주의하세요
-
 ## 출력 형식
 작업 완료 후 반드시 아래 형식으로 결과를 출력하세요:
 
-### 결과 요약
+### 구현 계획
+- 생성/수정 파일: [파일 목록]
+- 클래스/메서드 구조: [개요]
+
+### 구현 결과
 - 수정한 파일: [파일 목록]
 - 변경 내용: [변경 요약]
+- 기획서 충족 여부: [체크리스트]
 - 주의사항: [있으면 기술]
 """
     )
     agents.append(agent)
 
-  # 같은 그룹의 모든 에이전트를 하나의 메시지에서 병렬 생성
-  # run_in_background: true로 백그라운드 실행
-
-  # 모든 에이전트 완료 대기
   wait for all agents in group to complete
-
-  # 결과 수집
-  collect results from all agents
+  collect results
 ```
 
-### 3-2. 병렬 실행 규칙
+### 3-4. Phase C: 지원 작업 실행
+
+phase: "support"인 서브태스크(git, 빌드, 테스트, 문서 등)를 마지막에 실행합니다.
+실행 방식은 Phase B와 동일 (기획 산출물 주입 없음).
+
+### 3-5. 병렬 실행 규칙
 
 - 같은 executionGroup 내 서브태스크는 **하나의 메시지에서 여러 Agent 호출**로 병렬 실행
 - `run_in_background: true` 사용
 - 각 에이전트는 자신의 파일 소유권 범위만 수정
 - 최대 동시 실행 에이전트: 5개 (Claude Code 제한)
 - 5개 초과 시 그룹을 분할하여 순차 배치 실행
+- **Phase 순서 엄수**: plan → implement → support (절대 역전 금지)
 - **프리팹/씬 편집 에이전트는 다른 에이전트와 같은 .prefab/.scene/.fire 파일을 공유 불가**
 
 ---
