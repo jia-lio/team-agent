@@ -456,35 +456,35 @@ Architect의 분석 결과에 `newRoles`가 있으면:
 
 ## STEP 3: PLAN → EXECUTE (기획 → 구현 파이프라인)
 
-### 3-0. 기존 변경사항 스냅샷
+### 3-0. 사전 요구사항 + git 스냅샷
 
-에이전트 실행 전 현재 git 상태를 기록합니다 (롤백 시 에이전트 변경만 되돌리기 위해):
-```bash
-git diff --name-only          # 기존 수정 파일 목록 → pre_modified_files
-git ls-files --others --exclude-standard  # 기존 untracked 파일 → pre_untracked_files
+1. **tmux 설치 확인**:
+   ```bash
+   command -v tmux
+   ```
+   - tmux 있음 → **tmux 모드** (3-1 ~ 3-8 실행)
+   - tmux 없음 → **[경고] tmux 미설치. 기존 Agent 모드로 실행합니다.** 출력 후 **3-9. 폴백 모드** 실행
+
+2. **git 스냅샷** (롤백 시 에이전트 변경만 되돌리기 위해):
+   ```bash
+   git diff --name-only          # 기존 수정 파일 목록 → pre_modified_files
+   git ls-files --others --exclude-standard  # 기존 untracked 파일 → pre_untracked_files
+   ```
+
+### 3-1. 태스크 파일 사전 생성
+
+각 서브태스크를 독립 마크다운 파일로 작성합니다. tmux pane의 claude CLI 워커가 이 파일을 읽고 실행합니다.
+
 ```
+경로: .omc/unity-team-agent/tasks/{taskId}.md
 
-### 3-1. Phase A: 기획 에이전트 실행
+# plan phase 태스크 파일 내용:
+---
+role: {role.name}
+phase: plan
+taskId: {taskId}
+---
 
-phase: "plan"인 서브태스크를 먼저 실행합니다.
-
-```
-# plan phase 서브태스크만 필터링
-plan_tasks = [t for t in subtasks if t.phase == "plan"]
-
-# executionGroups 중 plan phase 태스크가 포함된 그룹만 순서대로 실행
-for each group in plan_groups:
-  agents = []
-  for each taskId in group.taskIds:
-    subtask = subtasks[taskId]
-    role = roles[subtask.role]
-
-    agent = Agent(
-      description: "기획: {role.name} - {subtask.description}",
-      subagent_type: role.agentType,
-      model: role.model || "opus",
-      run_in_background: true,
-      prompt: """
 ## 역할: {role.name}
 ## 시스템 컨텍스트
 {role.systemContext}
@@ -494,6 +494,7 @@ for each group in plan_groups:
 
 ## 파일 소유권
 당신이 작성할 수 있는 파일: {subtask.files}
+다른 파일은 절대 수정하지 마세요.
 
 ## 출력 요구사항
 기획 산출물을 **구체적이고 구현 가능한 수준**으로 작성하세요.
@@ -506,89 +507,24 @@ for each group in plan_groups:
 4. 외부 의존성 (다른 시스템과의 연동 포인트)
 5. 예외/엣지 케이스 처리 방침
 
-### 기획서
-[위 내용을 포함한 상세 기획서]
-"""
-    )
-    agents.append(agent)
+## 완료 시
+반드시 작업 결과를 아래 파일에 저장하세요:
+.omc/unity-team-agent/results/{taskId}.md
 
-  # 병렬 실행 후 완료 대기
-  wait for all agents in group to complete
-  collect results
-```
+# implement phase 태스크 파일 내용:
+---
+role: {role.name}
+phase: implement
+taskId: {taskId}
+plannerTaskId: {subtask.plannerTaskId}
+---
 
-**기획 산출물 저장**: 각 기획 에이전트의 결과를 `.omc/unity-team-agent/plans/{taskId}.md`에 저장합니다.
-
-### 3-1-1. Plan-only 산출물 즉시 전달
-
-Phase A 완료 후, 대응하는 implement 태스크가 **없는** 기획 산출물은 즉시 사용자에게 보여줍니다.
-구현이 필요한 기획은 Phase B로 넘깁니다.
-
-```
-# plan-only vs plan-with-impl 분류
-plan_only = [t for t in plan_tasks if no implement task references t.id as plannerTaskId]
-plan_with_impl = [t for t in plan_tasks if any implement task references t.id as plannerTaskId]
-
-if plan_only:
-  # 사용자에게 즉시 기획서 제시
-  for task in plan_only:
-    print("## 기획 완료: {task.description}")
-    print(read(".omc/unity-team-agent/plans/{task.id}.md"))
-
-  # Phase B를 백그라운드로 먼저 시작 (구현 작업은 기다리지 않음)
-  start Phase B in background (plan_with_impl tasks only)
-
-  # 사용자 피드백 수집 (구현은 병렬 진행 중)
-  AskUserQuestion("""
-  위 기획 산출물을 확인해주세요.
-  (구현 작업은 병렬로 진행 중입니다)
-
-  - 승인: 기획서 확정
-  - 수정 요청: 수정할 내용을 알려주세요 (최대 2회)
-  """)
-
-  if 수정 요청:
-    # 해당 기획 에이전트 재실행 (최대 2회)
-    re-run planner with user feedback
-    save updated plan
-
-else:
-  # 모든 기획이 구현 대상 → 바로 Phase B 진행
-  proceed to Phase B
-```
-
-### 3-2. Phase B: 프로그래머 에이전트 실행
-
-phase: "implement"인 서브태스크를 실행합니다. 각 프로그래머 에이전트에게 대응하는 기획 산출물을 주입합니다.
-
-```
-# implement phase 서브태스크만 필터링
-impl_tasks = [t for t in subtasks if t.phase == "implement"]
-
-for each group in implement_groups:
-  agents = []
-  for each taskId in group.taskIds:
-    subtask = subtasks[taskId]
-    role = roles[subtask.role]
-
-    # 대응 기획 산출물 로드
-    if subtask.plannerTaskId:
-      plan_doc = read(".omc/unity-team-agent/plans/{subtask.plannerTaskId}.md")
-    else:
-      plan_doc = "(기획서 없음 - 직접 판단하여 구현)"
-
-    agent = Agent(
-      description: "구현: {role.name} - {subtask.description}",
-      subagent_type: role.agentType,
-      model: role.model || "sonnet",
-      run_in_background: true,
-      prompt: """
 ## 역할: {role.name}
 ## 시스템 컨텍스트
 {role.systemContext}
 
 ## 기획서 (기획 에이전트 산출물)
-{plan_doc}
+{plan_doc — .omc/unity-team-agent/plans/{subtask.plannerTaskId}.md 내용을 인라인}
 
 ## 작업
 위 기획서를 기반으로 다음을 구현하세요:
@@ -596,7 +532,7 @@ for each group in implement_groups:
 
 ## 구현 절차 (반드시 순서대로)
 1. **기획서 분석**: 기획서의 요구사항, 데이터 구조, 로직 플로우를 파악
-2. **구현 계획 수립**: 어떤 파일에 어떤 코드를 작성할지 계획 (파일 목록, 클래스/메서드 구조)
+2. **구현 계획 수립**: 어떤 파일에 어떤 코드를 작성할지 계획
 3. **구현**: 계획에 따라 코드 작성
 4. **자체 검증**: 컴파일 에러 없는지, 기획서 요구사항을 모두 충족했는지 확인
 
@@ -609,39 +545,219 @@ for each group in implement_groups:
 - 프리팹/씬 편집은 MCP Unity 도구 사용을 우선하세요.
 - 에디터에서 열린 씬을 스크립트로 수정 시 충돌 주의.
 
-## 출력 형식
-작업 완료 후 반드시 아래 형식으로 결과를 출력하세요:
+## 완료 시
+반드시 작업 결과를 아래 파일에 저장하세요:
+.omc/unity-team-agent/results/{taskId}.md
 
-### 구현 계획
-- 생성/수정 파일: [파일 목록]
-- 클래스/메서드 구조: [개요]
-
-### 구현 결과
+결과 포맷:
 - 수정한 파일: [파일 목록]
 - 변경 내용: [변경 요약]
 - 기획서 충족 여부: [체크리스트]
 - 주의사항: [있으면 기술]
-"""
-    )
-    agents.append(agent)
 
-  wait for all agents in group to complete
-  collect results
+# support phase 태스크 파일: implement와 동일 구조 (기획서 섹션 제외)
 ```
 
-### 3-3. Phase C: 지원 작업 실행
+### 3-2. Phase A: 기획 에이전트 tmux 실행
+
+phase: "plan"인 서브태스크를 tmux pane에서 병렬 실행합니다.
+
+```
+plan_tasks = [t for t in subtasks if t.phase == "plan"]
+
+1. tmux 세션 생성
+   Bash: tmux new-session -d -s "unity-plan" -c "$(pwd)"
+
+2. 기획 태스크별 pane 생성 (최대 5개)
+   for each plan_task (index > 0):
+     Bash: tmux split-window -t "unity-plan" -d -c "$(pwd)"
+   Bash: tmux select-layout -t "unity-plan" tiled
+
+3. pane ID 목록 수집
+   Bash: tmux list-panes -t "unity-plan" -F '#{pane_id}' → pane_ids[]
+
+4. 각 pane에 claude CLI 실행
+   for each (pane_id, taskId) in zip(pane_ids, plan_task_ids):
+     Bash: tmux send-keys -t {pane_id} -l 'claude -p "Read the file .omc/unity-team-agent/tasks/{taskId}.md and execute ALL instructions in it. When done, save results to .omc/unity-team-agent/results/{taskId}.md"'
+     Bash: tmux send-keys -t {pane_id} Enter
+
+5. 사용자 안내
+   "[tmux] 기획 에이전트 {N}개 실행 중. tmux attach -t unity-plan 으로 진행 상황을 확인할 수 있습니다."
+
+6. 완료 대기 (모니터링 루프)
+   loop (최대 15분, 30초 간격):
+     completed = 0
+     for each taskId in plan_task_ids:
+       Bash: test -f ".omc/unity-team-agent/results/{taskId}.md" && echo "done"
+       if "done" → completed++
+     if completed == len(plan_task_ids) → break
+
+     # 진행 상황 표시 (선택)
+     "[tmux] 기획 진행: {completed}/{total} 완료"
+
+   if 타임아웃:
+     "[경고] 기획 에이전트 타임아웃. 완료된 결과만 사용합니다."
+
+7. 결과 수집
+   for each taskId in plan_task_ids:
+     Read(".omc/unity-team-agent/results/{taskId}.md")
+     → .omc/unity-team-agent/plans/{taskId}.md 에 기획서로 저장
+
+8. 세션 정리
+   Bash: tmux kill-session -t "unity-plan"
+```
+
+### 3-3. Plan-only 산출물 즉시 전달
+
+Phase A 완료 후, 대응하는 implement 태스크가 **없는** 기획 산출물은 즉시 사용자에게 보여줍니다.
+구현이 필요한 기획은 Phase B로 넘깁니다.
+
+```
+plan_only = [t for t in plan_tasks if no implement task references t.id as plannerTaskId]
+plan_with_impl = [t for t in plan_tasks if any implement task references t.id as plannerTaskId]
+
+if plan_only:
+  # 사용자에게 즉시 기획서 제시
+  for task in plan_only:
+    print("## 기획 완료: {task.description}")
+    print(read(".omc/unity-team-agent/plans/{task.id}.md"))
+
+  # Phase B를 백그라운드로 먼저 시작
+  start Phase B (plan_with_impl tasks only)
+
+  # 사용자 피드백 수집
+  AskUserQuestion("""
+  위 기획 산출물을 확인해주세요.
+  (구현 작업은 병렬로 진행 중입니다)
+
+  - 승인: 기획서 확정
+  - 수정 요청: 수정할 내용을 알려주세요 (최대 2회)
+  """)
+
+  if 수정 요청:
+    re-run planner with user feedback (최대 2회)
+    save updated plan
+
+else:
+  proceed to Phase B
+```
+
+### 3-4. Phase B: 프로그래머 에이전트 tmux 실행
+
+phase: "implement"인 서브태스크를 실행합니다. 태스크 파일에 기획 산출물이 포함되어 있습니다.
+
+```
+impl_tasks = [t for t in subtasks if t.phase == "implement"]
+
+# implement 태스크 파일은 3-1에서 이미 생성됨
+# 단, plan 결과를 반영하여 기획서 내용을 태스크 파일에 업데이트
+for each impl_task:
+  if impl_task.plannerTaskId:
+    plan_content = Read(".omc/unity-team-agent/plans/{impl_task.plannerTaskId}.md")
+    # 태스크 파일의 기획서 섹션을 실제 기획 산출물로 교체
+    Edit(".omc/unity-team-agent/tasks/{impl_task.id}.md", 기획서 섹션 업데이트)
+
+# tmux 실행 (Phase A와 동일 패턴)
+1. Bash: tmux new-session -d -s "unity-impl" -c "$(pwd)"
+2. pane 생성 + tiled 레이아웃
+3. 각 pane에 claude CLI 실행:
+   tmux send-keys -t {pane_id} -l 'claude -p "Read the file .omc/unity-team-agent/tasks/{taskId}.md and execute ALL instructions in it. When done, save results to .omc/unity-team-agent/results/{taskId}.md"'
+   tmux send-keys -t {pane_id} Enter
+4. "[tmux] 구현 에이전트 {N}개 실행 중. tmux attach -t unity-impl 으로 확인."
+5. 완료 대기 (결과 파일 폴링, 최대 15분)
+6. 결과 수집
+7. Bash: tmux kill-session -t "unity-impl"
+```
+
+### 3-5. Phase C: 지원 작업 tmux 실행
 
 phase: "support"인 서브태스크(git, 빌드, 테스트, 문서 등)를 마지막에 실행합니다.
-실행 방식은 Phase B와 동일 (기획 산출물 주입 없음).
+실행 방식은 Phase B와 동일 (기획 산출물 주입 없음). 세션명: `unity-support`.
 
-### 3-4. 병렬 실행 규칙
+### 3-6. executionGroup 내 순서 처리
 
-- 같은 executionGroup 내 서브태스크는 **하나의 메시지에서 여러 Agent 호출**로 병렬 실행
-- `run_in_background: true` 사용
-- 각 에이전트는 자신의 파일 소유권 범위만 수정
-- 최대 동시 실행 에이전트: 5개 (Claude Code 제한)
-- 5개 초과 시 그룹을 분할하여 순차 배치 실행
+executionGroups에 같은 phase의 태스크가 여러 그룹에 걸쳐 있으면:
+- 그룹 순서대로 tmux 세션을 생성 → 실행 → 대기 → 정리
+- 앞 그룹 완료 후 다음 그룹 실행 (의존성 보장)
+
+### 3-7. 병렬 실행 규칙
+
+- 같은 executionGroup 내 서브태스크 = 같은 tmux 세션에서 병렬 pane
+- 최대 동시 워커: **5개 pane** (5개 초과 시 그룹 분할하여 순차 배치)
 - **Phase 순서 엄수**: plan → implement → support (절대 역전 금지)
+- Phase 전환 시 이전 세션 kill → 새 세션 생성
+- 각 pane의 claude 워커는 자기 파일 소유권만 수정
+- 사용자는 `tmux attach -t <세션명>`으로 언제든 진행 상황 확인 가능
+- 개별 pane에서 직접 인터랙션 가능 (질문 응답, 방향 수정 등)
+
+### 3-8. tmux 세션 명명 규칙
+
+```
+기획 세션:  unity-plan
+구현 세션:  unity-impl
+지원 세션:  unity-support
+```
+
+기존 동명 세션이 있으면 먼저 `tmux kill-session -t <name>` 후 생성.
+
+### 3-9. 폴백 모드 (tmux 미설치 시)
+
+tmux가 없으면 기존 Agent 도구 기반으로 실행합니다:
+
+```
+for each phase in [plan, implement, support]:
+  phase_tasks = [t for t in subtasks if t.phase == phase]
+
+  for each group in phase_groups:
+    agents = []
+    for each taskId in group.taskIds:
+      subtask = subtasks[taskId]
+      role = roles[subtask.role]
+
+      # 기획 산출물 로드 (implement phase만)
+      if subtask.plannerTaskId:
+        plan_doc = read(".omc/unity-team-agent/plans/{subtask.plannerTaskId}.md")
+      else:
+        plan_doc = ""
+
+      agent = Agent(
+        description: "{phase}: {role.name} - {subtask.description}",
+        subagent_type: role.agentType,
+        model: role.model,
+        run_in_background: true,
+        prompt: """
+## 역할: {role.name}
+## 시스템 컨텍스트
+{role.systemContext}
+
+{if plan_doc: "## 기획서\n" + plan_doc}
+
+## 작업
+{subtask.description}
+
+## 파일 소유권
+수정 가능: {subtask.files}
+다른 파일 수정 금지.
+
+## Unity 주의사항
+- .meta 파일 직접 수정 금지.
+- 프리팹/씬은 MCP Unity 도구 우선.
+
+## 출력
+결과를 .omc/unity-team-agent/results/{taskId}.md에 저장.
+"""
+      )
+      agents.append(agent)
+
+    wait for all agents in group to complete
+    collect results
+
+  # plan phase 완료 후 기획서 저장
+  if phase == "plan":
+    for each plan_task:
+      copy results/{taskId}.md → plans/{taskId}.md
+    # plan-only 산출물 즉시 전달 (3-3과 동일 로직)
+```
 
 ---
 
