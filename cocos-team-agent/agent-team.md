@@ -83,8 +83,8 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       "keywords": ["게임", "로직", "컴포넌트", "스크립트", "이벤트", "라이프사이클", "start", "update", "onLoad", "onEnable", "스케줄러", "입력", "터치"],
       "filePatterns": ["assets/**/*.ts", "assets/**/*.js"],
       "versionContext": {
-        "2.x": "cc.Component 기반. 데코레이터: @ccclass, @property. 라이프사이클: onLoad→start→update. cc.systemEvent/node.on으로 이벤트. cc.director.getScheduler() 스케줄링. this.node.getComponent(). require()로 모듈 로드.",
-        "3.x": "Component 기반 (import { Component } from 'cc'). 데코레이터: @ccclass, @property. 라이프사이클: onLoad→start→update. input.on()/node.on() 이벤트. director 스케줄링. this.node.getComponent(). ESM import/export."
+        "2.x": "cc.Component 단위 개별 게임 오브젝트 행동, 씬 레벨 스크립팅 담당. 데코레이터: @ccclass, @property. 라이프사이클: onLoad→start→update. cc.systemEvent/node.on으로 이벤트. cc.director.getScheduler() 스케줄링. this.node.getComponent(). require()로 모듈 로드. 기획서 기반 복합 시스템(인벤토리, 전투 등 매니저/서비스)은 cocos-system-programmer 영역.",
+        "3.x": "Component 단위 개별 게임 오브젝트 행동, 씬 레벨 스크립팅 담당 (import { Component } from 'cc'). 데코레이터: @ccclass, @property. 라이프사이클: onLoad→start→update. input.on()/node.on() 이벤트. director 스케줄링. this.node.getComponent(). ESM import/export. 기획서 기반 복합 시스템(인벤토리, 전투 등 매니저/서비스)은 cocos-system-programmer 영역."
       },
       "builtin": true
     },
@@ -277,8 +277,8 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       "keywords": ["시스템구현", "인벤토리", "전투시스템", "퀘스트", "스킬시스템", "상태머신", "FSM", "매니저", "싱글톤", "이벤트버스", "옵저버", "커맨드패턴"],
       "filePatterns": ["assets/**/*.ts"],
       "versionContext": {
-        "2.x": "미들급 이상 시스템 프로그래머. cc.Component 기반 게임 핵심 시스템(인벤토리, 전투, 퀘스트, 스킬트리, 제작) 구현. FSM/상태 패턴, Observer/cc.systemEvent 이벤트 버스, 커맨드 패턴 적용. 싱글톤 매니저 패턴(cc.game.addPersistRootNode). 시스템 간 의존성 최소화, 인터페이스 기반 추상화. SOLID 원칙 준수. 확장 가능하고 유지보수 용이한 코드 작성.",
-        "3.x": "미들급 이상 시스템 프로그래머. Component 기반 (import from 'cc') 게임 핵심 시스템(인벤토리, 전투, 퀘스트, 스킬트리, 제작) 구현. FSM/상태 패턴, Observer/EventTarget 이벤트 버스, 커맨드 패턴 적용. 싱글톤 매니저 패턴(director.addPersistRootNode). 시스템 간 의존성 최소화, 인터페이스 기반 추상화. SOLID 원칙 준수. 확장 가능하고 유지보수 용이한 코드 작성."
+        "2.x": "미들급 이상 시스템 프로그래머. 기획서 기반 복합 게임 시스템(인벤토리, 전투, 퀘스트, 스킬트리, 제작) 구현. 매니저/서비스/데이터 모델 레이어 담당. FSM/상태 패턴, Observer/cc.systemEvent 이벤트 버스, 커맨드 패턴 적용. 싱글톤 매니저 패턴(cc.game.addPersistRootNode). 시스템 간 의존성 최소화, 인터페이스 기반 추상화. SOLID 원칙 준수. 개별 게임 오브젝트의 cc.Component 행동은 cocos-gameplay 역할에 위임.",
+        "3.x": "미들급 이상 시스템 프로그래머. 기획서 기반 복합 게임 시스템(인벤토리, 전투, 퀘스트, 스킬트리, 제작) 구현 (import from 'cc'). 매니저/서비스/데이터 모델 레이어 담당. FSM/상태 패턴, Observer/EventTarget 이벤트 버스, 커맨드 패턴 적용. 싱글톤 매니저 패턴(director.addPersistRootNode). 시스템 간 의존성 최소화, 인터페이스 기반 추상화. SOLID 원칙 준수. 개별 게임 오브젝트의 Component 행동은 cocos-gameplay 역할에 위임."
       },
       "builtin": true
     },
@@ -287,11 +287,11 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       "description": "라이브 서비스 컨텐츠 구현 - 이벤트, 미션, 보상, 시즌, 업데이트 시스템",
       "agentType": "executor",
       "model": "sonnet",
-      "keywords": ["컨텐츠구현", "이벤트시스템", "미션", "보상", "시즌", "업데이트", "라이브서비스", "튜토리얼구현", "업적", "일일미션", "출석"],
+      "keywords": ["컨텐츠구현", "이벤트시스템", "미션", "보상", "시즌", "업데이트", "라이브서비스", "튜토리얼구현", "업적", "일일미션", "출석", "다이얼로그", "대사시스템", "컷씬로직", "온보딩"],
       "filePatterns": ["assets/**/*.ts"],
       "versionContext": {
-        "2.x": "미들급 이상 컨텐츠 프로그래머. 라이브 서비스 컨텐츠 시스템(이벤트, 미션, 보상, 시즌, 업적, 출석, 튜토리얼) 구현. cc.loader/cc.resources 기반 컨텐츠 데이터 로딩. JSON 파일 기반 데이터 드리븐 컨텐츠 파이프라인. 서버 연동(XMLHttpRequest/WebSocket). 기획 테이블 변경만으로 컨텐츠 추가 가능한 구조 지향.",
-        "3.x": "미들급 이상 컨텐츠 프로그래머. 라이브 서비스 컨텐츠 시스템(이벤트, 미션, 보상, 시즌, 업적, 출석, 튜토리얼) 구현. resources/AssetBundle 기반 컨텐츠 데이터 로딩. JsonAsset 기반 데이터 드리븐 컨텐츠 파이프라인. 서버 연동(fetch/WebSocket). 기획 테이블 변경만으로 컨텐츠 추가 가능한 구조 지향."
+        "2.x": "미들급 이상 컨텐츠 프로그래머. 라이브 서비스 컨텐츠 시스템(이벤트, 미션, 보상, 시즌, 업적, 출석, 튜토리얼) 구현. 대사 시스템(DialogueManager, 분기 대화, 선택지 처리) 및 컷씬 트리거/조건 분기 로직 포함. 튜토리얼/온보딩 시퀀스 로직 담당. cc.loader/cc.resources 기반 컨텐츠 데이터 로딩. JSON 파일 기반 데이터 드리븐 컨텐츠 파이프라인. 서버 연동(XMLHttpRequest/WebSocket). 기획 테이블 변경만으로 컨텐츠 추가 가능한 구조 지향.",
+        "3.x": "미들급 이상 컨텐츠 프로그래머. 라이브 서비스 컨텐츠 시스템(이벤트, 미션, 보상, 시즌, 업적, 출석, 튜토리얼) 구현. 대사 시스템(DialogueManager, 분기 대화, 선택지 처리) 및 컷씬 트리거/조건 분기 로직 포함. 튜토리얼/온보딩 시퀀스 로직 담당. resources/AssetBundle 기반 컨텐츠 데이터 로딩. JsonAsset 기반 데이터 드리븐 컨텐츠 파이프라인. 서버 연동(fetch/WebSocket). 기획 테이블 변경만으로 컨텐츠 추가 가능한 구조 지향."
       },
       "builtin": true
     },
@@ -385,7 +385,7 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       "description": "스토리, 세계관, 캐릭터 설정, 대사, 퀘스트 텍스트",
       "agentType": "executor",
       "model": "sonnet",
-      "keywords": ["스토리", "내러티브", "세계관", "캐릭터", "대사", "퀘스트텍스트", "컷씬", "분기", "선택지", "다이얼로그"],
+      "keywords": ["스토리", "내러티브", "세계관", "캐릭터", "대사설계", "퀘스트텍스트", "컷씬설계", "분기", "선택지", "대화설계"],
       "filePatterns": ["docs/**/*.md", "docs/**/*.json"],
       "versionContext": {
         "2.x": "게임 내러티브 기획 전문가. 세계관, 스토리라인, 캐릭터, 대사, 퀘스트 텍스트, 컷씬 연출 설계. Cocos Creator 2.x 기준으로 JSON 대화 데이터, cc.Animation 컷씬 구조, i18n 다국어 텍스트 관리 고려. 산출물: 내러티브 문서, 대사 스크립트.",
@@ -404,6 +404,36 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
         "2.x": "게임 UX 플로우 기획 전문가. 유저 동선, 튜토리얼, 온보딩, UI 정보 구조, 화면 전환 설계. Cocos Creator 2.x 기준으로 cc.Widget/cc.Layout 기반 UI 계층, cc.director.loadScene() 씬 전환, .fire 씬 구조를 고려한 와이어프레임 수준 설계. 산출물: UX 플로우 문서.",
         "3.x": "게임 UX 플로우 기획 전문가. 유저 동선, 튜토리얼, 온보딩, UI 정보 구조, 화면 전환 설계. Cocos Creator 3.x 기준으로 UITransform/Widget/Layout 기반 UI 계층, director.loadScene() 씬 전환, .scene 씬 구조를 고려한 와이어프레임 수준 설계. 산출물: UX 플로우 문서."
       },
+      "builtin": true
+    },
+    "security-expert": {
+      "name": "보안 전문가",
+      "description": "보안 취약점 스캔, 인증/권한 검토, OWASP Top 10",
+      "agentType": "security-reviewer",
+      "model": "sonnet",
+      "keywords": ["보안", "인증", "XSS", "CSRF", "권한", "암호화", "토큰", "취약점"],
+      "filePatterns": ["assets/**/*.ts", "native/**/*", "settings/**/*.json"],
+      "systemContext": "보안 전문가. OWASP Top 10 기준으로 취약점 분석. 인증/권한/암호화 검토. Cocos Creator 프로젝트의 네이티브 브릿지, WebSocket 통신, localStorage 데이터 보안 주의.",
+      "builtin": true
+    },
+    "test-engineer": {
+      "name": "테스트 엔지니어",
+      "description": "테스트 전략, 유닛 테스트 작성, 커버리지 향상",
+      "agentType": "test-engineer",
+      "model": "sonnet",
+      "keywords": ["테스트", "TDD", "유닛", "커버리지", "jest", "mocha", "assert", "검증"],
+      "filePatterns": ["tests/**/*.ts", "test/**/*.ts"],
+      "systemContext": "Cocos Creator 테스트 엔지니어. Jest/Mocha 기반 유닛 테스트 전략 수립 및 구현. 게임 로직 단위 테스트, 데이터 검증 테스트.",
+      "builtin": true
+    },
+    "senior-dev": {
+      "name": "시니어 개발자",
+      "description": "리팩토링, 유틸리티/헬퍼, 공통 모듈, 전문 역할에 해당하지 않는 범용 구현",
+      "agentType": "executor",
+      "model": "sonnet",
+      "keywords": ["리팩토링", "유틸리티", "헬퍼", "공통모듈", "코드정리", "API연동", "설정", "초기화"],
+      "filePatterns": ["assets/**/*.ts"],
+      "systemContext": "시니어 개발자. 전문 프로그래머 역할(cocos-gameplay, cocos-system-programmer, cocos-content-programmer)에 해당하지 않는 유틸리티, 헬퍼, 공통 모듈, 리팩토링, 코드 정리 작업 담당. 클린 코드 원칙 준수.",
       "builtin": true
     }
   },
@@ -550,11 +580,19 @@ Cocos Creator {engine_version}
 12. useTools에 해당 작업에서 사용해야 할 cc 도구 명시 (cc-static, cc-preview, cc-editor, cc-build 등).
 13. **기획→구현 파이프라인 필수**: 구현 작업에는 반드시 대응하는 기획 태스크를 먼저 생성하세요.
     - 기획 역할(phase: "plan"): game-concept-designer, balance-designer, system-designer, content-designer, narrative-designer, ux-flow-designer
-    - 프로그래머 역할(phase: "implement"): cocos-gameplay, cocos-system-programmer, cocos-content-programmer, cocos-data-db, cocos-prefab, cocos-animation, cocos-audio, cocos-physics, cocos-resource, cocos-network, cocos-shader, cocos-performance, cocos-platform, cocos-i18n
-    - 지원 역할(phase: "support"): git-manager, docs-writer, cocos-architect, cocos-migrate, cocos-preview
+    - 프로그래머 역할(phase: "implement"): cocos-gameplay, cocos-ui, cocos-system-programmer, cocos-content-programmer, cocos-data-db, cocos-prefab, cocos-animation, cocos-audio, cocos-physics, cocos-resource, cocos-network, cocos-shader, cocos-performance, cocos-platform, cocos-i18n, senior-dev
+    - 지원 역할(phase: "support"): security-expert, test-engineer, git-manager, docs-writer, cocos-architect, cocos-migrate, cocos-preview
     - implement의 plannerTaskId에 대응 기획 태스크 ID 지정, dependsOn에도 포함
     - executionGroups에서 plan phase가 implement phase보다 항상 앞 그룹에 배치
 14. 기획이 불필요한 단순 작업(버그 수정, 리팩토링, 코드 정리)은 plannerTaskId 생략 가능. phase: "implement" 또는 "support"로 직접 할당.
+15. **기획→구현 기본 매핑** (기본값이며, 작업 특성에 따라 Architect가 조정 가능):
+    - system-designer → cocos-system-programmer (핵심 로직) + cocos-data-db (데이터 레이어)
+    - content-designer → cocos-content-programmer (서비스 로직) + cocos-data-db (데이터 레이어)
+    - balance-designer → cocos-data-db (테이블 로딩/파싱) + cocos-system-programmer (수치 적용 로직)
+    - narrative-designer → cocos-content-programmer (대사 시스템/분기 로직) + cocos-animation (컷씬 연출)
+    - ux-flow-designer → cocos-content-programmer (튜토리얼/온보딩 로직) + cocos-ui (UI 레이아웃)
+    - game-concept-designer → cocos-system-programmer (핵심 루프) + cocos-gameplay (프로토타입 스크립팅)
+16. **cocos-system-programmer vs cocos-gameplay 경계**: cocos-system-programmer는 기획서 기반 복합 시스템(매니저, 서비스, 데이터 모델) 담당. cocos-gameplay는 Component 단위 개별 오브젝트 행동, 입력, 물리 상호작용 등 씬 레벨 스크립팅 담당. 겹칠 때는 기획서의 주 시스템에 해당하면 cocos-system-programmer, 프로토타이핑/보조 스크립팅이면 cocos-gameplay.
 """
 )
 ```

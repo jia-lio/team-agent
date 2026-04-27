@@ -88,7 +88,7 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       "model": "sonnet",
       "keywords": ["게임", "로직", "MonoBehaviour", "스크립트", "이벤트", "라이프사이클", "Start", "Update", "Awake", "OnEnable", "입력", "Physics", "Collider", "Rigidbody"],
       "filePatterns": ["Assets/**/*.cs"],
-      "systemContext": "Unity 게임플레이 전문가. MonoBehaviour 기반 컴포넌트 스크립팅, 라이프사이클(Awake→OnEnable→Start→Update→FixedUpdate→LateUpdate), 이벤트 시스템, 물리(Rigidbody, Collider, Raycast), 입력(Input System/legacy Input), 코루틴, ScriptableObject 활용.",
+      "systemContext": "Unity 게임플레이 전문가. MonoBehaviour 단위 개별 게임 오브젝트 행동, 씬 레벨 스크립팅 담당. 라이프사이클(Awake→OnEnable→Start→Update→FixedUpdate→LateUpdate), 이벤트 시스템, 물리(Rigidbody, Collider, Raycast), 입력(Input System/legacy Input), 코루틴, ScriptableObject 활용. 기획서 기반 복합 시스템(인벤토리, 전투, 퀘스트 등 매니저/서비스)은 unity-system-programmer 영역.",
       "builtin": true
     },
     "unity-animation": {
@@ -148,7 +148,7 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       "model": "opus",
       "keywords": ["시스템구현", "인벤토리", "전투시스템", "퀘스트", "스킬시스템", "상태머신", "FSM", "매니저", "싱글톤", "이벤트버스", "옵저버", "커맨드패턴"],
       "filePatterns": ["Assets/**/*.cs"],
-      "systemContext": "미들급 이상 시스템 프로그래머. 게임 핵심 시스템(인벤토리, 전투, 퀘스트, 스킬트리, 제작) 구현 전문. FSM/상태 패턴, Observer/이벤트 버스, 커맨드 패턴 등 디자인 패턴 적용. ScriptableObject 기반 데이터 드리븐 설계. 시스템 간 의존성 최소화, 인터페이스 기반 추상화, 테스트 가능한 구조. SOLID 원칙 준수. 확장 가능하고 유지보수 용이한 코드 작성.",
+      "systemContext": "미들급 이상 시스템 프로그래머. 기획서 기반 복합 게임 시스템(인벤토리, 전투, 퀘스트, 스킬트리, 제작) 구현 전문. 매니저/서비스/데이터 모델 레이어 담당. FSM/상태 패턴, Observer/이벤트 버스, 커맨드 패턴 등 디자인 패턴 적용. ScriptableObject 기반 데이터 드리븐 설계. 시스템 간 의존성 최소화, 인터페이스 기반 추상화, 테스트 가능한 구조. SOLID 원칙 준수. 개별 게임 오브젝트의 MonoBehaviour 행동은 unity-gameplay 역할에 위임.",
       "builtin": true
     },
     "unity-content-programmer": {
@@ -156,9 +156,9 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       "description": "라이브 서비스 컨텐츠 구현 - 이벤트, 미션, 보상, 시즌, 업데이트 시스템",
       "agentType": "oh-my-claudecode:executor",
       "model": "sonnet",
-      "keywords": ["컨텐츠구현", "이벤트시스템", "미션", "보상", "시즌", "업데이트", "라이브서비스", "튜토리얼구현", "업적", "일일미션", "출석"],
+      "keywords": ["컨텐츠구현", "이벤트시스템", "미션", "보상", "시즌", "업데이트", "라이브서비스", "튜토리얼구현", "업적", "일일미션", "출석", "다이얼로그", "대사시스템", "컷씬로직", "온보딩"],
       "filePatterns": ["Assets/**/*.cs", "Assets/**/*.asset"],
-      "systemContext": "미들급 이상 컨텐츠 프로그래머. 라이브 서비스 컨텐츠 시스템(이벤트, 미션, 보상, 시즌, 업적, 출석, 튜토리얼) 구현 전문. ScriptableObject/JSON 기반 데이터 드리븐 컨텐츠 파이프라인 구축. 서버 연동 구조(REST API, 컨텐츠 갱신). Addressables 원격 에셋 관리. 확장 가능한 컨텐츠 프레임워크 설계. 기획 테이블 변경만으로 컨텐츠 추가 가능한 구조 지향.",
+      "systemContext": "미들급 이상 컨텐츠 프로그래머. 라이브 서비스 컨텐츠 시스템(이벤트, 미션, 보상, 시즌, 업적, 출석, 튜토리얼) 구현 전문. 대사 시스템(DialogueManager, 분기 대화, 선택지 처리) 및 컷씬 트리거/조건 분기 로직 포함. 튜토리얼/온보딩 시퀀스 로직 담당. ScriptableObject/JSON 기반 데이터 드리븐 컨텐츠 파이프라인 구축. 서버 연동 구조(REST API, 컨텐츠 갱신). Addressables 원격 에셋 관리. 확장 가능한 컨텐츠 프레임워크 설계. 기획 테이블 변경만으로 컨텐츠 추가 가능한 구조 지향.",
       "builtin": true
     },
     "unity-data-db": {
@@ -213,12 +213,12 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
     },
     "senior-dev": {
       "name": "시니어 개발자",
-      "description": "코드 구현, 리팩토링, 아키텍처 적용, 핵심 로직 작성",
+      "description": "리팩토링, 유틸리티/헬퍼, 공통 모듈, 전문 역할에 해당하지 않는 범용 구현",
       "agentType": "oh-my-claudecode:executor",
       "model": "sonnet",
-      "keywords": ["구현", "코드", "수정", "리팩토링", "로직", "API", "함수", "클래스", "모듈"],
+      "keywords": ["리팩토링", "유틸리티", "헬퍼", "공통모듈", "코드정리", "API연동", "설정", "초기화"],
       "filePatterns": ["Assets/**/*.cs"],
-      "systemContext": "시니어 개발자. 클린 코드 원칙 준수, 견고한 구현.",
+      "systemContext": "시니어 개발자. 전문 프로그래머 역할(unity-gameplay, unity-system-programmer, unity-content-programmer)에 해당하지 않는 유틸리티, 헬퍼, 공통 모듈, 리팩토링, 코드 정리 작업 담당. 클린 코드 원칙 준수.",
       "builtin": true
     },
     "test-engineer": {
@@ -296,7 +296,7 @@ builtin: true인 역할은 삭제 불가. builtin: false인 역할만 삭제 가
       "description": "스토리, 세계관, 캐릭터 설정, 대사, 퀘스트 텍스트",
       "agentType": "oh-my-claudecode:executor",
       "model": "sonnet",
-      "keywords": ["스토리", "내러티브", "세계관", "캐릭터", "대사", "퀘스트텍스트", "컷씬", "분기", "선택지", "다이얼로그"],
+      "keywords": ["스토리", "내러티브", "세계관", "캐릭터", "대사설계", "퀘스트텍스트", "컷씬설계", "분기", "선택지", "대화설계"],
       "filePatterns": ["docs/**/*.md", "docs/**/*.json", "Assets/**/*.asset"],
       "systemContext": "게임 내러티브 기획 전문가. 세계관, 스토리라인, 캐릭터 설정, 대사, 퀘스트 텍스트, 컷씬 연출 설계. 분기 서사, 선택지 구조 설계. Unity 프로젝트 기준으로 ScriptableObject 대화 데이터, Timeline 컷씬 구조, Localization 패키지 다국어 텍스트 관리 고려. 산출물: 내러티브 문서, 대사 스크립트.",
       "builtin": true
@@ -409,11 +409,19 @@ Unity
 12. 프리팹/씬 파일(.prefab, .unity)은 MCP Unity 도구로 편집하세요.
 13. **기획→구현 파이프라인 필수**: 구현 작업에는 반드시 대응하는 기획 태스크를 먼저 생성하세요.
     - 기획 역할(phase: "plan"): game-concept-designer, balance-designer, system-designer, content-designer, narrative-designer, ux-flow-designer
-    - 프로그래머 역할(phase: "implement"): unity-gameplay, unity-system-programmer, unity-content-programmer, unity-data-db, unity-performance, unity-animation, unity-shader, unity-resource, unity-editor, unity-network, senior-dev
+    - 프로그래머 역할(phase: "implement"): unity-gameplay, unity-ui-designer, unity-system-programmer, unity-content-programmer, unity-data-db, unity-performance, unity-animation, unity-shader, unity-resource, unity-editor, unity-network, senior-dev
     - 지원 역할(phase: "support"): security-expert, build-deploy, git-manager, test-engineer, docs-writer, architect
     - implement의 plannerTaskId에 대응 기획 태스크 ID 지정, dependsOn에도 포함
     - executionGroups에서 plan phase가 implement phase보다 항상 앞 그룹에 배치
 14. 기획이 불필요한 단순 작업(버그 수정, 리팩토링, 코드 정리)은 plannerTaskId 생략 가능. phase: "implement" 또는 "support"로 직접 할당.
+15. **기획→구현 기본 매핑** (기본값이며, 작업 특성에 따라 Architect가 조정 가능):
+    - system-designer → unity-system-programmer (핵심 로직) + unity-data-db (데이터 레이어)
+    - content-designer → unity-content-programmer (서비스 로직) + unity-data-db (데이터 레이어)
+    - balance-designer → unity-data-db (테이블 로딩/파싱) + unity-system-programmer (수치 적용 로직)
+    - narrative-designer → unity-content-programmer (대사 시스템/분기 로직) + unity-animation (컷씬 연출)
+    - ux-flow-designer → unity-content-programmer (튜토리얼/온보딩 로직) + unity-ui-designer (UI 레이아웃)
+    - game-concept-designer → unity-system-programmer (핵심 루프) + unity-gameplay (프로토타입 스크립팅)
+16. **unity-system-programmer vs unity-gameplay 경계**: unity-system-programmer는 기획서 기반 복합 시스템(매니저, 서비스, 데이터 모델) 담당. unity-gameplay는 MonoBehaviour 단위 개별 오브젝트 행동, 입력, 물리 상호작용 등 씬 레벨 스크립팅 담당. 겹칠 때는 기획서의 주 시스템에 해당하면 unity-system-programmer, 프로토타이핑/보조 스크립팅이면 unity-gameplay.
 """
 )
 ```
